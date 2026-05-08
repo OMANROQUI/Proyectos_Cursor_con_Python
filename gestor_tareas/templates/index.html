@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gestor de Tareas</title>
+
+    {# Hoja de estilos externa (opcional) #}
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+
+    {# Estilos básicos por si aún no existe style.css #}
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 2rem;
+        color: #111;
+      }
+      .container {
+        max-width: 720px;
+        margin: 0 auto;
+      }
+      h1 {
+        margin-bottom: 1.25rem;
+      }
+      .form-agregar {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+      }
+      .form-agregar input[type='text'] {
+        flex: 1;
+        padding: 0.6rem 0.8rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+      }
+      .form-agregar button {
+        padding: 0.6rem 1rem;
+        border: 0;
+        border-radius: 8px;
+        background: #2563eb;
+        color: white;
+        cursor: pointer;
+      }
+      .form-agregar button:hover {
+        background: #1d4ed8;
+      }
+      .estadisticas {
+        display: flex;
+        gap: 1.25rem;
+        margin-bottom: 1rem;
+        font-size: 0.95rem;
+        color: #4b5563;
+      }
+      .lista-tareas {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 0.75rem;
+      }
+      .tarea {
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 0.9rem 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+      }
+      .tarea-contenido {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+      .tarea-texto {
+        word-break: break-word;
+      }
+      .tarea.completada .tarea-texto {
+        text-decoration: line-through;
+        color: #6b7280;
+      }
+      .btn-eliminar {
+        text-decoration: none;
+        padding: 0.35rem 0.55rem;
+        border-radius: 8px;
+        border: 1px solid #fecaca;
+        color: #991b1b;
+      }
+      .btn-eliminar:hover {
+        background: #fef2f2;
+      }
+      .sin-tareas,
+      .empty {
+        border: 1px dashed #d1d5db;
+        border-radius: 12px;
+        padding: 1rem;
+        color: #4b5563;
+        list-style: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>📝 Gestor de Tareas</h1>
+
+      <form action="{{ url_for('agregar') }}" method="post" class="form-agregar">
+        <input
+          type="text"
+          name="texto_tarea"
+          placeholder="Escribe una nueva tarea..."
+          required
+          autofocus
+          maxlength="200"
+        />
+        <button type="submit">➕ Agregar</button>
+      </form>
+
+      {# Estadísticas de tareas (pendientes / completadas) #}
+      <div class="estadisticas">
+        {% set pendientes = tareas | selectattr('hecho', 'equalto', False) | list | length %}
+        {% set completadas = tareas | selectattr('hecho', 'equalto', True) | list | length %}
+        <span>Pendientes: <strong>{{ pendientes }}</strong></span>
+        <span>Completadas: <strong>{{ completadas }}</strong></span>
+      </div>
+
+      <ul class="lista-tareas">
+        {% if tareas %}
+          {% for tarea in tareas %}
+            <li class="tarea {% if tarea.hecho %}completada{% endif %}">
+              <div class="tarea-contenido">
+                <input
+                  type="checkbox"
+                  {% if tarea.hecho %}checked{% endif %}
+                  onclick="window.location.href='{{ url_for("completar", id=tarea.id) }}'"
+                />
+                <span class="tarea-texto">{{ tarea.texto }}</span>
+              </div>
+
+              <a
+                href="{{ url_for('eliminar', id=tarea.id) }}"
+                class="btn-eliminar"
+                onclick="return confirm('¿Eliminar esta tarea?');"
+              >
+                🗑️
+              </a>
+            </li>
+          {% endfor %}
+        {% else %}
+          <li class="sin-tareas">🎉 No hay tareas. ¡Agrega una nueva!</li>
+        {% endif %}
+      </ul>
+    </div>
+  </body>
+</html>
+

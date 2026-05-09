@@ -5,7 +5,6 @@
 ### *Dile adiós al caos digital* ✨
 
 [![Python Version](https://img.shields.io/badge/python-3.6+-blue.svg)](https://www.python.org/downloads/)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/OMANROQUI/Proyectos_Cursor_con_Python/graphs/commit-activity)
 
 [Características](#-características) •
@@ -317,11 +316,6 @@ Modifica `obtener_carpeta_usuario()` (y, si hace falta, la rama de la opción 2)
 
 ---
 
-## 📝 Licencia
-
-Este proyecto está bajo la Licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más detalles.
-
----
 
 ## 👨‍💻 Autor
 
